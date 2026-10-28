@@ -125,6 +125,7 @@ typedef enum
 }STMType;
 
 RingBuffer Rxbuff;
+Packet SensorData;
 bool parser_feed(uint8_t byte, Packet *packet)
 {
 	static STMType StateMachine;
@@ -154,7 +155,12 @@ bool parser_feed(uint8_t byte, Packet *packet)
 		}
 		case ST_Parse:
 		{
-			packet->payload[tail] = byte;
+			uint8_t i;
+			for (i = Rxbuff.tail; i< Rxbuff.head; i++)
+			{
+				SensorData.payload[i] = Rxbuff.data[Rxbuff.tail + i];		// copy main DATA
+			}
+
 			break;
 		}
 	}
